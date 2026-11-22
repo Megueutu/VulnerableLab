@@ -1,0 +1,11 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+COPY app.py board.css ./
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV SHIFT_BOARD_HOST=0.0.0.0
+
+USER 10001:10001
+EXPOSE 8084
+CMD ["python", "app.py"]

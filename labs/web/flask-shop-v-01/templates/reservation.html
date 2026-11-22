@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf, breakdown with context %}
+{% block title %}Minha reserva · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page">
+  <div class="section-heading">
+    <h1>Minha reserva</h1>
+    <span class="pill status {{ reservation.status }}">{{ status_label[reservation.status] }}</span>
+  </div>
+  <div class="store-layout">
+    <div class="panel">
+      <dl class="details-list">
+        <div><dt>Código da reserva</dt><dd class="reservation-code">{{ reservation.code }}</dd></div>
+        <div><dt>Horário de retirada</dt><dd>{{ reservation.starts_at|pickup_day }} às {{ reservation.starts_at|pickup_time }}</dd></div>
+        <div><dt>Endereço</dt><dd>{{ store_address }}</dd></div>
+      </dl>
+      {% if reservation.status == "pending" %}
+        <form action="{{ url_for('cancel', code=reservation.code) }}" method="post" class="actions">
+          {{ csrf() }}
+          <button type="submit" class="button-danger">Cancelar reserva</button>
+        </form>
+      {% endif %}
+      <a href="{{ url_for('tracking') }}">Consultar outra reserva</a>
+    </div>
+    <aside class="panel">
+      <h2>Itens da reserva</h2>
+      {{ breakdown(lines, total) }}
+    </aside>
+  </div>
+</section>
+{% endblock %}

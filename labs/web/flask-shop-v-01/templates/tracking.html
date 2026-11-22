@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf with context %}
+{% block title %}Acompanhar reserva · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page page-narrow">
+  <h1>Acompanhar reserva</h1>
+  <div class="panel">
+    <p>Informe o código recebido na confirmação para ver o horário e a situação do pedido.</p>
+    {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+    <form class="stack-form" method="post">
+      {{ csrf() }}
+      <div class="field">
+        <label for="code">Código da reserva</label>
+        <input id="code" name="code" value="{{ code }}" required maxlength="32" autocapitalize="characters" spellcheck="false" placeholder="PRACA-…"{% if error %} aria-invalid="true"{% endif %}>
+      </div>
+      <div><button type="submit">Buscar reserva <span aria-hidden="true">→</span></button></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

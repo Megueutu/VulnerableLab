@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf, breakdown, progress with context %}
+{% block title %}Minha cesta · Mercearia da Praça{% endblock %}
+{% block main %}
+  <section class="page">
+    {{ progress(1) }}
+    <h1>Minha cesta</h1>
+    {% if lines %}
+      <div class="store-layout">
+        <div class="panel">
+          {% if errors %}<ul class="notice error" role="alert">{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+          <form id="basket-form" method="post" novalidate>
+            {{ csrf() }}
+            {% for line in lines %}
+              <div class="basket-line">
+                <div class="mini-art {{ line.tone }}" aria-hidden="true">{{ line.icon }}</div>
+                <div class="basket-item-name"><strong>{{ line.name }}</strong><small>{{ line.price_cents|money }} · {{ line.measure }}</small></div>
+                <label class="visually-hidden" for="quantity-{{ line.id }}">Quantidade de {{ line.name }}</label>
+                <input id="quantity-{{ line.id }}" name="quantity_{{ line.id }}" type="number" min="0" max="99" value="{{ line.quantity }}">
+                <button type="submit" name="remove" value="{{ line.id }}" class="button-link" aria-label="Remover {{ line.name }}">Remover</button>
+              </div>
+            {% endfor %}
+            <div class="actions">
+              <button class="button-line" type="submit">Atualizar quantidades</button>
+              <a href="{{ url_for('catalog', _anchor='vitrine') }}">Continuar na vitrine</a>
+            </div>
+          </form>
+        </div>
+        <aside class="panel">
+          <h2>Total da reserva</h2>
+          {{ breakdown(lines, total) }}
+          {% if not errors %}<button type="submit" form="basket-form" name="continue" value="1" class="full">Escolher retirada <span aria-hidden="true">→</span></button>{% endif %}
+        </aside>
+      </div>
+    {% else %}
+      <div class="panel empty">
+        <h2>Sua cesta está vazia</h2>
+        <p>Escolha seus produtos na vitrine para começar uma reserva.</p>
+        <a class="button" href="{{ url_for('catalog', _anchor='vitrine') }}">Voltar à vitrine</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf, breakdown, progress with context %}
+{% block title %}Dados para retirada · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page">
+  {{ progress(2) }}
+  <h1>Dados para retirada</h1>
+  <div class="store-layout">
+    <div class="panel">
+      {% if errors %}
+        <ul class="notice error" role="alert">{% for error in errors.values() %}<li>{{ error }}</li>{% endfor %}</ul>
+      {% endif %}
+      <form method="post" action="{{ url_for('checkout') }}" class="stack-form">
+        {{ csrf() }}
+        <div class="field">
+          <label for="name">Nome</label>
+          <input id="name" name="name" autocomplete="name" value="{{ details.get('name', '') }}" maxlength="100" required{% if 'name' in errors %} aria-invalid="true"{% endif %}>
+        </div>
+        <div class="field">
+          <label for="contact">E-mail ou telefone com DDD</label>
+          <input id="contact" name="contact" value="{{ details.get('contact', '') }}" maxlength="120" required{% if 'contact' in errors %} aria-invalid="true"{% endif %}>
+        </div>
+        <div class="field">
+          <label for="slot">Horário de retirada</label>
+          <select id="slot" name="slot" required{% if 'slot' in errors %} aria-invalid="true"{% endif %}>
+            <option value="" disabled{% if not details.get('slot') %} selected{% endif %}>Selecione um horário</option>
+            {% if details.get('slot') and not chosen_slot_shown %}<option value="" selected disabled>O horário escolhido está indisponível</option>{% endif %}
+            {% for slot in slots %}
+              <option value="{{ slot.starts_at }}"{% if slot.starts_at == details.get('slot') %} selected{% endif %}{% if slot.occupied >= slot.capacity %} disabled{% endif %}>{{ slot.starts_at|pickup_day }} às {{ slot.starts_at|pickup_time }}{% if slot.occupied >= slot.capacity %} · lotado{% endif %}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="actions">
+          <button type="submit">Revisar pedido <span aria-hidden="true">→</span></button>
+          <a href="{{ url_for('basket') }}">Editar cesta</a>
+        </div>
+      </form>
+    </div>
+    <aside class="panel">
+      <h2>Sua cesta</h2>
+      {{ breakdown(lines, total) }}
+      <p class="pickup-note"><strong>Endereço para retirada</strong><br>{{ store_address }}</p>
+    </aside>
+  </div>
+</section>
+{% endblock %}

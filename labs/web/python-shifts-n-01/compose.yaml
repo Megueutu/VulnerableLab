@@ -1,0 +1,12 @@
+name: vl-web-python-shifts-n-01
+
+services:
+  board:
+    build: .
+    ports:
+      - "127.0.0.1:8084:8084"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

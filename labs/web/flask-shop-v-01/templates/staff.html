@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf with context %}
+{% block title %}Área da equipe · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page">
+  <div class="section-heading">
+    <h1>Área da equipe</h1>
+    <form method="post" action="{{ url_for('staff_logout') }}">{{ csrf() }}<button type="submit" class="button-line">Sair</button></form>
+  </div>
+  <nav class="category-list" aria-label="Seções do painel">
+    <a href="#reservas">Reservas por horário</a>
+    <a href="#estoque">Estoque disponível</a>
+  </nav>
+  <section id="reservas" class="staff-section" aria-labelledby="orders-title">
+    <h2 id="orders-title">Reservas por horário</h2>
+    {% for time, reservations in groups %}
+      <div class="panel slot-group">
+        <h3>{{ time|pickup_day }} · {{ time|pickup_time }}</h3>
+        {% for order, lines in reservations %}
+          <article class="staff-order">
+            <div class="section-heading">
+              <h4>{{ order.customer }} <small>{{ order.code }}</small></h4>
+              <span class="pill status {{ order.status }}">{{ status_label[order.status] }}</span>
+            </div>
+            <div class="staff-order-info">
+              <div>
+                <p class="muted">{{ order.contact }}</p>
+                <ul class="line-items">
+                  {% for line in lines %}<li><span>{{ line.quantity }} × {{ line.name }}</span><span>{{ line.subtotal|money }}</span></li>{% endfor %}
+                </ul>
+              </div>
+              {% if order.status in next_status %}
+                {% set next = next_status[order.status] %}
+                <form method="post" action="{{ url_for('update_status', code=order.code) }}">
+                  {{ csrf() }}
+                  <button type="submit" class="button-line" name="status" value="{{ next }}">Marcar como {{ status_label[next]|lower }}</button>
+                </form>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="panel">Ainda não há reservas.</p>
+    {% endfor %}
+  </section>
+  <section id="estoque" class="staff-section" aria-labelledby="stock-title">
+    <h2 id="stock-title">Estoque disponível</h2>
+    <div class="panel">
+      {% for product in products %}
+        <form class="stock-row" action="{{ url_for('update_stock', product_id=product.id) }}" method="post">
+          {{ csrf() }}
+          <div><strong>{{ product.name }}</strong><small>{{ product.category }} · {{ product.measure }}</small></div>
+          <div>
+            <input type="hidden" name="current_stock" value="{{ product.stock }}">
+            <label class="visually-hidden" for="stock-{{ product.id }}">Estoque disponível de {{ product.name }}</label>
+            <input type="number" id="stock-{{ product.id }}" name="stock" value="{{ product.stock }}" min="0" max="999" required>
+            <button type="submit" class="button-line" aria-label="Salvar estoque de {{ product.name }}">Salvar</button>
+          </div>
+        </form>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+{% endblock %}

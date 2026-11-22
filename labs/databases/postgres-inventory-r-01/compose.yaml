@@ -1,0 +1,25 @@
+name: vl-databases-postgres-inventory-r-01
+
+services:
+  db:
+    image: postgres:17-bookworm
+    network_mode: none
+    command: ["postgres", "-c", "listen_addresses=127.0.0.1"]
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lab_admin
+      POSTGRES_INITDB_ARGS: "--auth-local=scram-sha-256 --auth-host=scram-sha-256"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - PGPASSWORD="$$POSTGRES_PASSWORD" psql -X -h 127.0.0.1 -U postgres -d inventory -Atqc 'SELECT 1'
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - inventory-data:/var/lib/postgresql/data
+      - ./sql/01-inventory.sql:/docker-entrypoint-initdb.d/01-inventory.sql:ro
+
+volumes:
+  inventory-data:

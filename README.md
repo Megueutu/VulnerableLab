@@ -31,6 +31,16 @@ make up LAB=rest/python-shop-n-01
 make up LAB=rest/fintech-r-01
 ```
 
+## Três labs originais
+
+| Lab | Exercício | Entrada local |
+|---|---|---|
+| `web/flask-shop-v-01` | Mercearia criada a partir de prompts de produto | <http://127.0.0.1:8083> |
+| `web/python-shifts-n-01` | Quadro de turnos e formulários HTML | <http://127.0.0.1:8084> |
+| `databases/postgres-inventory-r-01` | Privilégios por papel em um inventário fictício | Terminal do contêiner |
+
+Use `make up LAB=<tipo>/<id>` e consulte o README do lab. As [decisões de design](docs/original-labs-design.md) registram o processo de revisão.
+
 ## Catálogo
 
 Consulte o [handoff dos labs](docs/lab-handoff.md) para ver os identificadores, as stacks, os perfis e as instruções para criar e entregar um lab.

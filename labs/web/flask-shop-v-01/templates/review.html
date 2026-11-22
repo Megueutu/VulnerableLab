@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf, breakdown, progress with context %}
+{% block title %}Revisar reserva · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page">
+  {{ progress(3) }}
+  <h1>Revise sua reserva</h1>
+  <div class="store-layout">
+    <div class="panel">
+      <h2>Informações da retirada</h2>
+      <dl class="details-list">
+        <div><dt>Nome</dt><dd>{{ details.name }}</dd></div>
+        <div><dt>Contato</dt><dd>{{ details.contact }}</dd></div>
+        <div><dt>Horário</dt><dd>{{ details.slot|pickup_day }} às {{ details.slot|pickup_time }}</dd></div>
+        <div><dt>Endereço</dt><dd>{{ store_address }}</dd></div>
+      </dl>
+      <form action="{{ url_for('confirm') }}" method="post" class="actions">
+        {{ csrf() }}
+        <input type="hidden" name="draft_key" value="{{ session.draft_key }}">
+        <button type="submit">Confirmar reserva <span aria-hidden="true">→</span></button>
+        <a href="{{ url_for('checkout') }}">Editar dados</a>
+      </form>
+    </div>
+    <aside class="panel">
+      <h2>Itens da reserva</h2>
+      {{ breakdown(lines, total) }}
+      <a href="{{ url_for('basket') }}">Editar cesta</a>
+    </aside>
+  </div>
+</section>
+{% endblock %}

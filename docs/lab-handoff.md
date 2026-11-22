@@ -11,6 +11,7 @@ Use `rest`, `graphql`, `grpc`, `web` e `databases` como categorias. Escolha uma 
 | Spring Boot | `sb` |
 | Quarkus | `quarkus` |
 | FastAPI | `fast` |
+| Flask | `flask` |
 | Django / Django REST Framework | `dj` |
 | Ruby on Rails | `rails` |
 | NestJS | `nest` |
@@ -77,6 +78,11 @@ Os nomes de diretórios e arquivos são em inglês. Use o case idiomático da st
 | `grpc/grpcgo-inventory-n-01` | Go com grpc-go | Estoque | N | 1 | Planejado |
 | `web/rails-shop-n-01` | Rails | Shop | N | 1 | Planejado |
 | `databases/postgres-fintech-r-01` | PostgreSQL | Fintech | R | 0 | Planejado |
+| `web/flask-shop-v-01` | Flask | Mercearia | V | 1 | Implementado |
+| `web/python-shifts-n-01` | Python padrão | Turnos | N | 1 | Implementado |
+| `databases/postgres-inventory-r-01` | PostgreSQL | Inventário | R | 0 | Implementado |
+
+A rodada dos três labs originais está em [decisões de design](original-labs-design.md).
 
 ## Decisões de revisão
 

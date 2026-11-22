@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf, breakdown with context %}
+{% block main %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">A mercearia do bairro</p>
+    <h1>Escolha na vitrine.<br><em>Retire na praça.</em></h1>
+    <p>Reserve frutas, pães e os favoritos da despensa para buscar na loja no horário que você escolher.</p>
+    <a href="#vitrine" class="button button-light">Ver produtos <span aria-hidden="true">↓</span></a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="hero-circle"></div>
+    <span class="sparkle sparkle-large">✦</span><span class="sparkle sparkle-small">✧</span>
+    <span class="hero-produce hero-bread">🥖</span><span class="hero-produce hero-carrot">🥕</span>
+    <span class="hero-produce hero-lettuce">🥬</span><span class="hero-produce hero-tomato">🍅</span>
+    <div class="illustration-basket"></div>
+  </div>
+</section>
+
+<section class="store-layout" id="vitrine" aria-labelledby="catalog-heading">
+  <div class="catalog">
+    <div class="section-heading"><h2 id="catalog-heading">Vitrine da mercearia</h2><span>{{ products|length }} {{ 'produto' if products|length == 1 else 'produtos' }}</span></div>
+    <form method="get" action="{{ url_for('catalog', _anchor='vitrine') }}" class="search-form" role="search">
+      {% if category %}<input type="hidden" name="categoria" value="{{ category }}">{% endif %}
+      <label class="visually-hidden" for="search">Buscar por nome ou categoria</label>
+      <input type="search" id="search" name="q" value="{{ search }}" placeholder="Buscar por nome ou categoria">
+      <button type="submit">Buscar</button>
+    </form>
+    <nav class="category-list" aria-label="Categorias">
+      <a href="{{ url_for('catalog', q=search or None, _anchor='vitrine') }}" {% if not category %}aria-current="true"{% endif %}>Todos</a>
+      {% for option in categories %}
+        <a href="{{ url_for('catalog', q=search or None, categoria=option, _anchor='vitrine') }}" {% if option == category %}aria-current="true"{% endif %}>{{ option }}</a>
+      {% endfor %}
+    </nav>
+    {% if products %}
+      <div class="product-grid">
+        {% for product in products %}
+          {% set remaining = [product.stock, 99]|min - reserved.get(product.id|string, 0) %}
+          <article class="product-card" id="produto-{{ product.id }}">
+            <div class="product-art {{ product.tone }}" aria-hidden="true">{{ product.icon }}</div>
+            <div class="product-copy">
+              <p class="product-category">{{ product.category }} <span>·</span> {{ product.measure }}</p>
+              <h3>{{ product.name }}</h3>
+              <p class="product-description">{{ product.description }}</p>
+              <div class="product-price"><strong>{{ product.price_cents|money }}</strong>
+                {% if not product.stock %}<span class="pill sold-out">Esgotado</span>
+                {% elif remaining <= 0 %}<span class="pill">Limite na cesta</span>
+                {% elif remaining <= 3 %}<span class="pill limited">{{ remaining }} {{ 'restante' if remaining == 1 else 'restantes' }}</span>
+                {% endif %}
+              </div>
+              {% if remaining > 0 %}
+                <form class="product-form" method="post" action="{{ url_for('add_product', product_id=product.id) }}">
+                  {{ csrf() }}
+                  <input type="hidden" name="q" value="{{ search }}">
+                  <input type="hidden" name="categoria" value="{{ category }}">
+                  <label class="visually-hidden" for="quantity-{{ product.id }}">Quantidade de {{ product.name }}</label>
+                  <input type="number" id="quantity-{{ product.id }}" name="quantity" value="1" min="1" max="{{ remaining }}" required>
+                  <button type="submit" aria-label="Adicionar {{ product.name }} à cesta">Adicionar <span aria-hidden="true">+</span></button>
+                </form>
+              {% elif product.stock and remaining <= 0 %}
+                <a href="{{ url_for('basket') }}" class="button button-line full">Revisar na cesta</a>
+              {% else %}
+                <button type="button" class="full" disabled>Indisponível</button>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="panel empty">
+        <h3>Nenhum produto encontrado</h3>
+        <p>Experimente outro nome ou categoria.</p>
+        <a class="button button-line" href="{{ url_for('catalog', _anchor='vitrine') }}">Ver todos os produtos</a>
+      </div>
+    {% endif %}
+  </div>
+  <aside class="panel basket-sidebar" aria-labelledby="sidebar-title">
+    <div class="section-heading"><h2 id="sidebar-title">Sua cesta</h2><span class="count">{{ cart_count }}</span></div>
+    {% if lines %}
+      {{ breakdown(lines, total) }}
+      <a href="{{ url_for('basket') }}" class="button full">Conferir cesta <span aria-hidden="true">→</span></a>
+    {% else %}
+      <p class="muted">Adicione produtos e confira o total da sua reserva aqui.</p>
+    {% endif %}
+    <p class="pickup-note"><strong>Retirada na loja</strong><br>{{ store_address }}</p>
+  </aside>
+</section>
+{% endblock %}

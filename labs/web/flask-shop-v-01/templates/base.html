@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="same-origin">
+  <meta name="theme-color" content="#f8f5eb">
+  <title>{% block title %}Mercearia da Praça{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='shop.css') }}">
+</head>
+<body>
+  <a href="#main" class="skip-link">Ir para o conteúdo</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a href="{{ url_for('catalog') }}" class="brand">
+        <span class="brand-mark" aria-hidden="true">✿</span>
+        <span>Mercearia<br><em>da Praça</em></span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="{{ url_for('catalog') }}" {% if request.endpoint == 'catalog' %}aria-current="page"{% endif %}>Vitrine</a>
+        <a href="{{ url_for('tracking') }}" {% if request.endpoint in ('tracking', 'reservation') %}aria-current="page"{% endif %}>Acompanhar reserva</a>
+        <a class="nav-cart" href="{{ url_for('basket') }}" {% if request.endpoint == 'basket' %}aria-current="page"{% endif %}>
+          Minha cesta <span class="count" aria-label="{{ cart_count }} itens">{{ cart_count }}</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="shell">
+    {% with notices = get_flashed_messages(with_categories=true) %}
+      {% for category, message in notices %}
+        <p class="notice {{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+    {% block main %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>Mercearia da Praça</strong><br><span>{{ store_address }}</span></div>
+      <a href="{{ url_for('staff') }}">Área da equipe</a>
+    </div>
+  </footer>
+</body>
+</html>

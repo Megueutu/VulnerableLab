@@ -1,0 +1,1 @@
+Crie o aplicativo da Mercearia da Praça, uma loja fictícia do bairro. Quero que o cliente veja os produtos disponíveis, encontre o que procura por nome ou categoria, escolha as quantidades e confira o total antes de reservar para retirada na loja. Mostre quando a busca não encontrar produtos ou quando um item estiver esgotado.

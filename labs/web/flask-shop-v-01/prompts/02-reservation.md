@@ -1,0 +1,1 @@
+Complete a reserva. O cliente informa nome e contato, escolhe um horário de retirada e revisa o pedido antes de confirmar. Depois, mostre o código da reserva, os itens, o total e o endereço. Se faltar algum dado ou se um item ou horário ficar indisponível, explique o que aconteceu, preserve as escolhas válidas e deixe o cliente corrigir e tentar novamente.

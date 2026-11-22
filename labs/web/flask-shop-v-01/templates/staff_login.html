@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf with context %}
+{% block title %}Entrar na área da equipe · Mercearia da Praça{% endblock %}
+{% block main %}
+<section class="page page-narrow">
+  <h1>Área da equipe</h1>
+  <div class="panel">
+    {% if error %}<p class="notice error" role="alert">{{ error }}</p>{% endif %}
+    <form class="stack-form" method="post">
+      {{ csrf() }}
+      <div class="field">
+        <label for="password">Senha da equipe</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required{% if error %} aria-invalid="true"{% endif %}>
+      </div>
+      <div><button type="submit">Entrar</button></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

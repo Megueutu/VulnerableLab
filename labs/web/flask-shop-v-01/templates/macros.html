@@ -1,0 +1,20 @@
+{% macro csrf() %}
+  <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+{% endmacro %}
+
+{% macro breakdown(lines, total) %}
+  <ul class="line-items">
+    {% for line in lines %}
+      <li><span><strong>{{ line.quantity }} ×</strong> {{ line.name }}</span><span>{{ line.subtotal|money }}</span></li>
+    {% endfor %}
+  </ul>
+  <div class="totals"><span>Total</span><strong>{{ total|money }}</strong></div>
+{% endmacro %}
+
+{% macro progress(step) %}
+  <ol class="steps" aria-label="Etapas da reserva">
+    <li{% if step == 1 %} aria-current="step"{% endif %}>Cesta</li>
+    <li{% if step == 2 %} aria-current="step"{% endif %}>Retirada</li>
+    <li{% if step == 3 %} aria-current="step"{% endif %}>Revisão</li>
+  </ol>
+{% endmacro %}

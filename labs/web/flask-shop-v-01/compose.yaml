@@ -1,0 +1,14 @@
+name: vl-web-flask-shop-v-01
+
+services:
+  shop:
+    build: .
+    ports:
+      - "127.0.0.1:8083:8000"
+    environment:
+      STAFF_PASSWORD: ${STAFF_PASSWORD:-}
+    volumes:
+      - shop-data:/data
+
+volumes:
+  shop-data:

@@ -24,6 +24,13 @@ O crAPI é o lab padrão. O Makefile configura o bind em `127.0.0.1`. A interfac
 
 Quando o subtree for publicado, um clone normal já trará os arquivos. Para atualizar depois, use `git subtree pull` com o mesmo prefixo e upstream e a nova tag. Atualize também a versão das imagens no script de inicialização. Preserve os commits do subtree ao integrar a importação.
 
+## Labs próprios
+
+```sh
+make up LAB=rest/python-shop-n-01
+make up LAB=rest/fintech-r-01
+```
+
 ## Catálogo
 
 Consulte o [handoff dos labs](docs/lab-handoff.md) para ver os identificadores, as stacks, os perfis e as instruções para criar e entregar um lab.

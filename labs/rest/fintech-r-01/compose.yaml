@@ -1,0 +1,20 @@
+services:
+  bank:
+    build: ./ms-python-bank
+    environment:
+      DIRECTORY_URL: http://account-data:8000/branch-directory
+    ports:
+      - "127.0.0.1:8082:8000"
+    networks:
+      - edge
+      - data
+    depends_on:
+      - account-data
+  account-data:
+    build: ./ms-python-account-data
+    networks:
+      - data
+networks:
+  edge: {}
+  data:
+    internal: true

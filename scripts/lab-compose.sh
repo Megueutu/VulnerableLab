@@ -7,7 +7,7 @@ case "$LAB" in
         export LISTEN_IP=127.0.0.1
         export VERSION=1.1.6
         ;;
-    rest/*|graphql/*|grpc/*)
+    rest/*|graphql/*|grpc/*|web/*|databases/*)
         case "${LAB#*/}" in
             ''|*[!a-z0-9-]*)
                 printf '%s\n' 'Use LAB=tipo/nome com letras minúsculas, dígitos e hífens.' >&2
@@ -17,7 +17,7 @@ case "$LAB" in
         compose_file="labs/$LAB/compose.yaml"
         ;;
     *)
-        printf '%s\n' 'Tipo de API desconhecido. Rode make list.' >&2
+        printf '%s\n' 'Categoria de lab desconhecida. Rode make list.' >&2
         exit 2
         ;;
 esac

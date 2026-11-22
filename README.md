@@ -26,14 +26,4 @@ Quando o subtree for publicado, um clone normal já trará os arquivos. Para atu
 
 ## Catálogo
 
-| Lab ou proposta | Tipo | Framework | O que comparar | Estado |
-|---|---|---|---|---|
-| `rest/crapi` | REST | Múltiplas stacks | Fronteiras entre serviços | Importação inicial via subtree |
-| `rest/pedidos-java` | REST | Spring Boot | Filtros e autorização por recurso | Planejado |
-| `rest/pedidos-python` | REST | FastAPI | Dependências de autenticação e validação | Planejado |
-| `graphql/pedidos` | GraphQL | NestJS | Resolvers e autorização por campo | Planejado |
-| `grpc/estoque` | gRPC | Go com grpc-go | Interceptores e contratos Protobuf | Planejado |
-
-Comparar a mesma API REST em Spring Boot e FastAPI ajuda a observar o efeito do framework. Depois, comparar REST, GraphQL e gRPC mostra como o contrato e a unidade de autorização mudam. Autenticação, autorização e validação continuam relevantes em todos.
-
-Cada lab novo fica em `labs/<tipo>/<nome>/`, com um `compose.yaml` para execução local e um `README.md` com framework, contrato, endereço local e instruções específicas. Mantenha arquivos de upstream intactos dentro do subtree.
+Consulte o [handoff dos labs](docs/lab-handoff.md) para ver os identificadores, as stacks, os perfis e as instruções para criar e entregar um lab.

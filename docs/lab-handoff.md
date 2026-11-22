@@ -80,15 +80,33 @@ Os nomes de diretórios e arquivos são em inglês. Use o case idiomático da st
 
 ## Decisões de revisão
 
+### Rodada 1 — Identidade e escopo
+
 | Pergunta | Decisão |
 |---|---|
-| Onde fica o prefixo `ms-`? | No diretório de cada serviço próprio, diretamente abaixo do diretório da aplicação. |
-| O que entra na contagem de serviços? | Aplicações e workers implantáveis. O Compose declara dependências de infraestrutura separadamente. |
-| Como nomear Python sem framework? | `python`, por extenso. `ms-py-database` vira `ms-python-account-data` quando o componente é uma API de dados. |
-| E Spring Boot, Quarkus e autenticação? | `ms-sb-auth` e `ms-quarkus-bank` são nomes válidos quando esses componentes existem. |
-| Onde fica a topologia? | No Compose e no README local. O catálogo registra a quantidade de serviços, que pode crescer sem renomear o lab. |
-| Como ligar versões comparáveis? | Registre os IDs relacionados no catálogo e preserve o mesmo contrato entre versões comparáveis. |
-| Precisamos de outro perfil agora? | N, V e R cobrem o primeiro ciclo. Dificuldade e topologia são informações independentes. |
-| Como escolher os primeiros exemplos? | Uma loja de serviço único e uma fintech com dois serviços usam Python padrão para permitir comparar topologias mantendo a stack. |
+| O que o diretório raiz identifica? | Uma aplicação executável. Em aplicação única, o ID inclui a stack. Em aplicação multisserviço, o ID usa finalidade, perfil e número. |
+| Quando um cenário tem múltiplas interfaces? | A interface principal para quem inicia o exercício define a categoria. Interfaces secundárias aparecem no catálogo e no README. Use `scenarios/` para experiências que agrupam aplicações independentes ou têm várias entradas igualmente centrais. |
+| O perfil é dificuldade ou processo? | É uma escolha sobre implementação e revisão. Dificuldade fica em campo separado e só é estimada quando houver um exercício definido. N, V e R bastam nesta fase. |
+| A finalidade é livre? | Use um termo curto em inglês e reaproveite um termo já catalogado quando descrever o mesmo domínio. |
+
+### Rodada 2 — Topologia e contrato de execução
+
+| Pergunta | Decisão |
+|---|---|
+| Onde entram stack e função de cada serviço? | Em `ms-<stack>-<role>/`, direto na raiz do lab. Exemplos válidos são `ms-quarkus-bank`, `ms-sb-auth` e `ms-python-account-data`. Python sem framework segue a regra da linguagem por extenso. |
+| O que conta como serviço próprio? | API, frontend com processo próprio ou worker implantável. Banco, fila e cache padrão são dependências do Compose. Uma API própria de acesso a dados conta como serviço. |
+| Onde fica o ponto de entrada? | O Compose declara as portas publicadas e o README informa o endereço de entrada. Na fintech atual, só `bank` publica uma porta em loopback. `account-data` fica na rede interna `data`. |
+| Como o Make seleciona o lab? | `LAB=<type>/<id>` aponta para o Compose na raiz. Os nomes das pastas `ms-` não entram nesse seletor. Subtrees seguem o layout do upstream, como acontece com o caminho previsto para o crAPI. |
+| Como manter atividades independentes? | Cada lab tem seu Compose. Use portas locais distintas para os exemplos que podem rodar juntos. A loja usa 8081 e a fintech usa 8082. |
+
+### Rodada 3 — Evolução e verificação
+
+| Pergunta | Decisão |
+|---|---|
+| Quando criar outro ID? | Quando surgir uma variante com outro perfil, finalidade ou contrato de exercício. Ao ampliar uma aplicação multisserviço, mantenha seu ID e atualize a ficha. Se uma aplicação única virar multisserviço, registre a mudança de caminho explicitamente e vincule os IDs no catálogo. |
+| Como comparar implementações? | Registre os IDs relacionados e declare a variável da comparação, como stack, perfil ou topologia. Só chame de comparação controlada quando o contrato e as regras de negócio forem equivalentes. |
+| O que os dois primeiros exemplos demonstram? | A loja demonstra uma pasta de aplicação única. A fintech demonstra dois serviços e uma rede interna no Compose. Como os contratos diferem, são exemplos de layout, não um experimento controlado de topologia. |
+| O que conta como validado? | Registre separadamente testes HTTP, verificação do Compose e execução dos contêineres. Um teste HTTP local pode provar o contrato sem provar o isolamento da implantação. |
+| O que falta para comparar os perfis? | Um par de labs do mesmo domínio com contrato e dados de teste equivalentes, critérios de revisão explícitos e a variável escolhida registrada no catálogo. A implementação atual já fornece exemplos de nomenclatura e execução para começar. |
 
 Os primeiros exemplos usam somente dados públicos fictícios, sem contas de teste. A fintech aplica R ao isolamento e ao tratamento de falha da dependência neste recorte. As rotas e a integração HTTP foram verificadas localmente em Python. A execução pelo Compose ficou pendente.
